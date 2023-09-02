@@ -16,6 +16,7 @@ function handleSubmit(event) {
                 // Extract latitude (lat) and longitude (lng) from the Geonames response
                 const lat = geonamesRes.geonames[0].lat;
                 const lng = geonamesRes.geonames[0].lng;
+                
 
                 // Send a POST request to fetch weather data based on lat and lng
                 postData('/weatherbit', { lat, lng })

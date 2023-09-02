@@ -53,10 +53,10 @@ app.post('/weatherbit', async function handleWeatherForecastRequest(req, res) {
     const lng = req.body.lng;
 
     if (lat && lng) {
-        const WeatherURL = `https://api.weatherbit.io/v2.0/current?lat=${lat}&lon=${lng}&key=${weatherbitApiKey}`;
-        
+        const weatherURL = `https://api.weatherbit.io/v2.0/current?lat=${lat}&lon=${lng}&key=${weatherbitApiKey}&include=minutely`;
+        console.log(weatherURL);
         try {
-            const response = await fetch(WeatherURL);
+            const response = await fetch(weatherURL);
             if (response.ok) {
                 const jsonRes = await response.json();
                 res.status(200).json(jsonRes);
