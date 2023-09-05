@@ -10,6 +10,7 @@ form {
     gap: 25px;
     margin: auto;
     background-color: #f3f4f5;
+
     .form-departure {
         padding: 0 16px;
         margin: 0 16px;
@@ -60,4 +61,22 @@ input {
     width: 100%;
     line-height: 16px;
     margin: 10px 0;
+}
+
+@media (max-width:450px) {
+    form{
+        flex-direction: column;
+        padding: 0 16px;
+        width: 75%;
+        margin: 0 16px;
+        .form-destination {
+            width: 75%;
+        }
+        .form-departure {
+            padding: 0 16px;
+            margin: 0 16px;
+            width: 75%;
+        }
+    }
+ 
 }

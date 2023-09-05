@@ -20,7 +20,7 @@ app.get('/', function (req, res) {
     res.sendFile('dist/index.html');
 });
 
-// Define your API endpoints here
+// API endpoints here
 // Geonames API endpoint
 app.get('/geonames', async (req, res) => {
     const destination = req.query.destination;
