@@ -1,73 +1,98 @@
-function handleSubmit(event) {
-    event.preventDefault();
 
-    // Check what text was put into the form field
-    const cityName = document.getElementById('destination').value;
+// Function to make a POST request to the server
+async function postData(url = '', data = {}) {
+  console.log('Analyzing:', data);
 
-    // Updating the UI with data received from the server
-    if (cityName) {
-        console.log(`Form Submitted ${cityName}`);
-        document.querySelector('.results').style.display = 'block';
-        document.querySelector('#error').style.display = 'none';
-
-        // Send a POST request to fetch geonames data
-        postData('/api', { url: cityName })
-            .then(function (geonamesRes) {
-                // Extract latitude (lat) and longitude (lng) from the Geonames response
-                const lat = geonamesRes.geonames[0].lat;
-                const lng = geonamesRes.geonames[0].lng;
-                
-
-                // Send a POST request to fetch weather data based on lat and lng
-                postData('/weatherbit', { lat, lng })
-                    .then(function (weatherbitRes) {
-                        // Update the HTML elements with weather data
-                        document.getElementById('weather-description').textContent = `Weather: ${weatherbitRes.data[0].weather.description}`;
-                        document.getElementById('temperature').textContent = `Temperature: ${weatherbitRes.data[0].temp}°C`;
-                        // Add more elements for other weather data you want to display
-
-                        // Update other elements with weather data as needed
-                    })
-                    .catch(function (weatherbitError) {
-                        console.error('Error fetching Weatherbit data:', weatherbitError);
-                    });
-            })
-            .catch(function (geonamesError) {
-                console.error('Error fetching Geonames data:', geonamesError);
-            });
-    } else {
-        document.querySelector('.results').style.display = 'none';
-        document.querySelector('#error').style.display = 'block';
-        document.getElementById('error').innerHTML =
-            'Appears to be an incorrect URL. Please attempt with a valid URL.';
-        console.log(cityName);
-    }
-}
-
-const postData = async (url = '', data = {}) => {
-    console.log('Analyzing:', data);
-
+  try {
     // Send a POST request using fetch
     const response = await fetch(url, {
-        method: 'POST',
-        credentials: 'same-origin',
-        mode: 'cors',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+      method: 'POST',
+      credentials: 'same-origin',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
     });
-    try {
-        const newData = await response.json();
-        console.log('Data received:', newData);
-        // Return the parsed data
-        return newData;
-    } catch (error) {
-        console.error('Error in postData:', error);
 
-        // Return an error object with a message
-        return { error: true, message: 'An error occurred during the request.' };
+    if (response.status === 200) {
+      const newData = await response.json();
+      console.log('Data received:', newData);
+      return newData;
+    } else {
+      console.error('Error in postData:', response.statusText);
+      return { error: true, message: 'An error occurred during the request.' };
     }
-};
+  } catch (error) {
+    console.error('Error in postData:', error);
+    return { error: true, message: 'An error occurred during the request.' };
+  }
+}
 
-export { handleSubmit };
+// Function to handle the form submission
+async function handleSubmit(event) {
+  event.preventDefault();
+
+  // Get the destination and departure date from the form
+  const destination = document.getElementById('destination').value;
+  const departureDate = document.getElementById('departure-date').value;
+
+  // Check if the destination is not empty
+  if (destination) {
+    try {
+      // Make the API requests and calculate remaining days here
+      const geonamesResponse = await fetch(`/geonames?destination=${destination}`);
+      const geonamesData = await geonamesResponse.json();
+      const { lat, lng } = geonamesData.geonames[0];
+
+      const weatherbitResponse = await fetch(`/weatherbit?lat=${lat}&lon=${lng}&departureDate=${departureDate}`);
+      const weatherbitData = await weatherbitResponse.json();
+
+      const pixabayResponse = await fetch(`/pixabay?destination=${destination}`);
+      const pixabayData = await pixabayResponse.json();
+
+      // Calculate remaining days
+      const currentDate = new Date();
+      const departure = new Date(departureDate);
+      const remainingDays = Math.ceil((departure - currentDate) / (1000 * 60 * 60 * 24));
+
+      // Display weather information
+      const weatherInfo = document.getElementById('weather-info');
+      weatherInfo.innerHTML = `
+      <div>
+        <p>Weather information for ${destination} on ${departureDate} (${remainingDays} days remaining):</p>
+      </div>
+      <div>
+        <p>Temperature: ${weatherbitData.data[0].temp}°C</p>
+      </div>
+      <div>
+        <p>Weather Description: ${weatherbitData.data[0].weather.description}</p>
+      </div>
+      <div>
+        <p>Image: <img src="${pixabayData.hits[0].webformatURL}" alt="${destination}"></p>
+      </div>
+    `;
+
+      // Save data to local storage
+      const travelData = {
+        destination,
+        departureDate,
+        remainingDays,
+        weather: weatherbitData.data[0],
+        image: pixabayData.hits[0].webformatURL,
+      };
+
+      localStorage.setItem('travelData', JSON.stringify(travelData));
+    } catch (error) {
+      console.error('Error:', error);
+      const weatherInfo = document.getElementById('weather-info');
+      weatherInfo.innerHTML = 'An error occurred while fetching weather data.';
+    }
+  } else {
+    // Handle the case where the destination is empty
+    const weatherInfo = document.getElementById('weather-info');
+    weatherInfo.innerHTML = 'Please enter a destination.';
+  }
+}
+
+export { handleSubmit, postData };

@@ -15,43 +15,27 @@
                 navigation
             </div>
         </header>
+        <div class="page-h1">
+            <h1>Need a place to stay?
+            </h1>
+        </div>
+    
+    <form id="travel-form" onsubmit="return Client.handleSubmit(event)">
+        <div class="form-destination">
+            <label for="destination">Destination:</label>
+            <input type="text" id="destination" name="destination" required>
+        </div>
 
-        <main>
-            <section>
-                <form class="" onsubmit="return Client.handleSubmit(event)">
-                    <input id="destination" type="text" name="input" value="" placeholder="Enter City">
-                    <input type="submit" name="" value="submit" onclick="return Client.handleSubmit(event)" onsubmit="return handleSubmit(event)">
-                </form>
-            </section>
+        <div class="form-departure">
+            <label for="departure-date">Departure Date:</label>
+            <input type="date" id="departure-date" name="departure-date" required>
+        </div>
+        <input type="submit" value="Search for hotels" class="btn">
+    </form>
+    <div id="weather-info"></div>
+    <footer>
+        <p>Mo'tasem Odeh</p>
+    </footer>
 
-            <section>
-                <strong>Form Results:</strong>
-                <div class="results">
-                <div id="lan"></div>
-                <div id="lat"></div>
-                <div id="country"></div>
-                <div id="weather-description"></div>
-                <div id="temperature"></div>
-                </div>
-                <div id="error"></div>
-            </section>
-        </main>
-
-        <footer>
-            <p>Mo'tasem Odeh</p>
-        </footer>
-
-        <!-- <script>
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('/service-worker.js')
-                    .then(registration =>{
-                        console.log('SW registered successfuly: ', registration);
-                    });
-                });
-            }else{
-                console.log("Service Working is not supported");
-            }
-    </script> -->
-    </body>
+</body>
 </html>

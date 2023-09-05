@@ -1,7 +1,58 @@
+@import "variables";
+
 form {
-    border: 1px solid #545454;
-    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 40px;
+    width: 75%;
+    border-radius: 20px;
+    gap: 25px;
+    margin: auto;
+    background-color: #f3f4f5;
+    .form-departure {
+        padding: 0 16px;
+        margin: 0 16px;
+        input {
+            border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: none;
+    cursor: pointer;
+    height: 40px;
+    line-height: 1;
+    text-align: left;
+    text-overflow: ellipsis;
+}
+        }
+
+
+    .form-destination {
+        padding: 0 16px;
+        margin: 0 16px;
+        input{
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: none;
+            height: 40px;
+            text-overflow: ellipsis;
+        }
+    }
+    #destination {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        box-shadow: none;
+        text-overflow: ellipsis;
+    }
+    .btn {
+        margin: 20px 16px 0;
+        border-radius: 24px;
+        color: #fff;
+        background-color: #000;
+        height: 40px;
+        min-width: 40px;
+        padding: 7px 15px;
+        max-width: 150px;
+    }
 }
 
 input {
